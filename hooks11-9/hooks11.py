@@ -1,6 +1,7 @@
 import pprint
 
 def create_hook_map():
+    """Generates the 9x9 grid with the fixed L-shaped hook regions."""
     size = 9
     hook_map = [[0] * size for _ in range(size)]
     for i in range(size // 2 + 1):
@@ -12,6 +13,7 @@ def create_hook_map():
     return hook_map
 
 def create_hook_lookup(hook_map):
+    """Pre-computes hook coordinates for instant lookups."""
     lookup = {}
     for r in range(9):
         for c in range(9):
@@ -22,6 +24,7 @@ def create_hook_lookup(hook_map):
     return lookup
 
 def get_polyomino_shapes():
+    """Returns a dictionary of standard pentominoes by name."""
     return {
         "F": {(0, 1), (1, 0), (1, 1), (1, 2), (2, 1)}, "I": {(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)},
         "L": {(0, 0), (1, 0), (2, 0), (3, 0), (3, 1)}, "P": {(0, 0), (0, 1), (1, 0), (1, 1), (2, 0)},
@@ -32,6 +35,7 @@ def get_polyomino_shapes():
     }
 
 def get_all_orientations(shape):
+    """Generates all 8 orientations for a given shape."""
     orientations = set()
     current_shape = shape
     for _ in range(4):
@@ -41,7 +45,13 @@ def get_all_orientations(shape):
         current_shape = frozenset({(-c, r) for r, c in current_shape})
     return [set(o) for o in orientations]
 
+# --- PART 2: THE PENTOMINO TILING VERIFIER ---
+
 def can_be_tiled(board, required_pentominoes):
+    """
+    Checks if non-zero cells can be tiled. If successful, returns the
+    tiling solution (a dict mapping shape names to coordinates).
+    """
     target_cells = sorted([ (r, c) for r in range(9) for c in range(9) if board[r][c] != 0 ])
 
     if len(target_cells) != len(required_pentominoes) * 5:
@@ -71,7 +81,10 @@ def can_be_tiled(board, required_pentominoes):
 
     return solve_tiling(target_cells, required_pentominoes, {})
 
+# --- PART 3: THE MAIN SOLVER AND VALIDATION ---
+
 def check_pentomino_clues(tiling_solution, clues):
+    """Checks if the pentomino placements satisfy the outside letter clues."""
     if not tiling_solution: return False
     
     for r_idx, clue_list in enumerate(clues["rows"]):
@@ -89,6 +102,7 @@ def check_pentomino_clues(tiling_solution, clues):
     return True
 
 def is_valid_number_placement(board, hook_lookup, clues):
+    """Checks the Hook Count Rule and outside NUMBER clues."""
     for hook_id in hook_lookup:
         count = sum(1 for r, c in hook_lookup[hook_id] if board[r][c] == hook_id)
         if count != hook_id:
@@ -107,13 +121,15 @@ def is_valid_number_placement(board, hook_lookup, clues):
             
     return True
 
+# --- HEURISTIC IMPROVEMENT ---
 def find_best_empty_cell(board, hook_map, hook_lookup):
+    """Finds the empty cell with the Minimum Remaining Values (MRV)."""
     best_cell = None
-    min_options = 11
+    min_options = 11  # Start with a value > 10 (0-9 are possible numbers)
 
     for r in range(9):
         for c in range(9):
-            if board[r][c] == -1:
+            if board[r][c] == -1:  # If the cell is empty
                 options_count = 0
                 # Count how many numbers (0-9) are a valid placement
                 for num in range(10):
@@ -139,6 +155,9 @@ def find_best_empty_cell(board, hook_map, hook_lookup):
     return best_cell
 
 def solve_numbers(board, hook_map, hook_lookup, required_pentominoes, clues):
+    """Efficiently solves for numbers, then validates against tiling and all clues."""
+    # --- HEURISTIC IMPROVEMENT ---
+    # Find the most constrained empty cell to solve next
     next_cell = find_best_empty_cell(board, hook_map, hook_lookup)
 
     # If no valid empty cell is found, either we are done or we've hit a dead end
@@ -166,10 +185,14 @@ def solve_numbers(board, hook_map, hook_lookup, required_pentominoes, clues):
             if solve_numbers(board, hook_map, hook_lookup, required_pentominoes, clues):
                 return True
 
-    board[r][c] = -1
+    board[r][c] = -1 # Backtrack
     return False
 
+# --- MAIN EXECUTION ---
+# 1. Define the puzzle's required pentominoes
 REQUIRED_PENTOMINO_NAMES = ["I", "U", "N", "X", "V", "Z"]
+
+# 2. Define your grid and row/column preconditions
 precondition_grid = [
     [0, 0, 0, 0, 5, 0, 0, 0, 0],
     [0, 0, 0, 4, 0, 0, 0, 0, 0],
@@ -184,7 +207,7 @@ precondition_grid = [
 
 outside_clues = {
     "rows": [
-        [1, "U"],
+        [1, "U"], # Row 0 must contain the number 1 AND intersect the U-pentomino
         [], 
         [], 
         [6, "X"], 
@@ -206,6 +229,9 @@ outside_clues = {
         []
     ],
 }
+# ---------------------------------------------------
+
+# 3. Set up the board and shapes
 POLYOMINO_LIB = get_polyomino_shapes()
 required_pentominoes = []
 for name in REQUIRED_PENTOMINO_NAMES:
@@ -221,6 +247,7 @@ for r in range(9):
 hook_map = create_hook_map()
 hook_lookup = create_hook_lookup(hook_map)
 
+# 4. Run the solver
 print(f"Attempting to solve. Requires tiling {len(REQUIRED_PENTOMINO_NAMES)} pentominoes.")
 if solve_numbers(board, hook_map, hook_lookup, required_pentominoes, outside_clues):
     print("\nSolution found! ✅")
