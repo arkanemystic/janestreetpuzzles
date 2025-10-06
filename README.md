@@ -3,3 +3,5 @@
 This repository contains my solutions to the monthly Jane Street puzzles.
 
 https://www.janestreet.com/puzzles/
+
+![Example Solution](/readmeExample.png)
