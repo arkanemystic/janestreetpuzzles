@@ -15,7 +15,7 @@ Here is a list of the puzzles I've solved. You can click the link to view the co
 | Puzzle / Month | Solution File | Status |
 | :------------- | :---------------------------------------------------------- | :------ |
 | **Hooks** | [hooks11-9/solution.py](https://github.com/arkanemystic/janestreetpuzzles/tree/main/hooks11-9) | ✅ Solved |
-| **Robot Baseball** | [robotbaseball/solution.py]() | ✅ Solved |
+| **Robot Baseball** | [robotbaseball/solution.py]() | Unsolved |
 | *More to come* | ...                                                         | ...     |
 
 
