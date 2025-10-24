@@ -2,8 +2,8 @@ from sympy import Symbol, simplify, lambdify
 import numpy as np
 from scipy.optimize import minimize_scalar
 import time
-p = Symbol('p', real=True, positive=True)
 
+p = Symbol('p', real=True, positive=True)
 V = {}
 Q = {}
 
@@ -41,13 +41,18 @@ for s in [1, 0]:
     for b in [3, 2, 1, 0]:
         iter_start = time.time()
         print(f"  Computing state ({b}, {s})...")
+        
         V_b_plus_1 = V[(b + 1, s)]
         V_s_plus_1 = V[(b, s + 1)]
         Q_b_plus_1 = Q[(b + 1, s)]
         Q_s_plus_1 = Q[(b, s + 1)]
+        
         w = simplify(p * (4 - V_s_plus_1) / (V_b_plus_1 - V_s_plus_1 + p * (4 - V_s_plus_1)))
+        
         V[(b, s)] = simplify(w * V_b_plus_1 + (1 - w) * V_s_plus_1)
+        
         Q[(b, s)] = simplify(w**2 * Q_b_plus_1 + (1 - w**2 - (1 - w)**2 * p) * Q_s_plus_1)
+        
         iter_time = time.time() - iter_start
         print(f"    V({b}, {s}) computed")
         print(f"    Q({b}, {s}) computed")
@@ -120,11 +125,11 @@ right_deriv = (q_right - q_center) / epsilon
 print(f"  Left derivative:  {left_deriv:.6e}")
 print(f"  Right derivative: {right_deriv:.6e}")
 if left_deriv > 0 and right_deriv < 0:
-    print("  ✓ Confirmed: This is a local maximum")
+    print("  Confirmed: This is a local maximum")
 elif abs(left_deriv) < 1e-6 and abs(right_deriv) < 1e-6:
-    print("  ✓ Derivatives near zero - likely a critical point")
+    print("  Derivatives near zero - likely a critical point")
 else:
-    print("  ⚠ Warning: Derivative behavior unexpected")
+    print("  Warning: Derivative behavior unexpected")
 
 total_time = time.time() - start_time
 print(f"\nTotal runtime: {total_time:.1f}s")

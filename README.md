@@ -15,11 +15,11 @@ Here is a list of the puzzles I've solved. You can click the link to view the co
 | Puzzle / Month | Solution File | Status |
 | :------------- | :---------------------------------------------------------- | :------ |
 | **Hooks** / **Sept 2025** | [hooks11-9/solution.py](https://github.com/arkanemystic/janestreetpuzzles/tree/main/hooks11-9) | ✅ Solved |
-| **Robot Baseball** / **Oct 2025** | [robotbaseball/solution.py]() | Unsolved |
+| **Robot Baseball** / **Oct 2025** | [robotbaseball.py](https://github.com/arkanemystic/janestreetpuzzles/blob/main/robotbaseball.py) | Unsolved |
 | *More to come* | ...                                                         | ...     |
 
 
-## ✨ Example Output
+## Example Output
 Below is an image showing the output from one of the puzzle solvers.
 
 <p align="center">
