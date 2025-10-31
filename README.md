@@ -51,5 +51,5 @@ Below is an image showing the output from one of the puzzle solvers (`hooks11wor
 
 <p align="center"\>
 <img src="https://github.com/arkanemystic/janestreetpuzzles/blob/main/readmeExample.png?raw=true" alt="Example Solution Output" width="300"/\>
-<img src"https://github.com/arkanemystic/janestreetpuzzles/blob/main/readmeExample1.png" alt="Example Solution Output" width="300">
+<img src"https://github.com/arkanemystic/janestreetpuzzles/blob/main/readmeExample1.png?raw=true" alt="Example Solution Output" width="300">
 </p\>
